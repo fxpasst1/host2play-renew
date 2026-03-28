@@ -335,7 +335,7 @@ def renew_host2play(url, proxy_url=None):
                     print(f"⚠️ 保存源码失败: {dump_err}")
         else:
             if "操作成功" not in msg:
-                msg = "❌  无法通过 reCAPTCHA"
+                msg = "❌ host2play 无法通过 reCAPTCHA"
                 try:
                     page.handle_alert(accept=True)
                     with open("error_captcha_failed.html", "w", encoding="utf-8") as f:
