@@ -48,7 +48,7 @@ jobs:
           RENEW_URL: ${{ secrets.RENEW_URL }}
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          PROXY: socks5://127.0.0.1:8080  # 这里改为 Socks5
+          PROXY: http://127.0.0.1:8080  # 这里改为 Socks5
         run: python main.py
 
       - name: Upload Error Screenshots
