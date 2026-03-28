@@ -26,23 +26,17 @@ jobs:
           sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
           sudo apt-get install -y google-chrome-stable
 
-      - name: Install and Run GOST SOCKS5 Proxy
-        env:
-          PROXY_LINK: ${{ secrets.PROXY_LINK }}  # 例如：ss://xxx 或 vmess://xxx 或 socks5://...
+      - name: 🛡️ 启动 Gost 代理转发
         run: |
-          echo "⬇️ 下载 gost"
-          wget -q https://github.com/go-gost/gost/releases/latest/download/gost-linux-amd64.gz
-          gzip -d gost-linux-amd64.gz
-          chmod +x gost-linux-amd64
-
-          echo "🚀 启动 gost 本地 SOCKS5 代理 :10808"
-          nohup ./gost-linux-amd64 -L socks5://127.0.0.1:10808 -F "$PROXY_LINK" > gost.log 2>&1 &
-
-          echo "⏳ 等待启动 5 秒"
-          sleep 5
-
-          echo "🌐 测试代理"
-          curl -x socks5h://127.0.0.1:10808 -I https://www.google.com/generate_204 || true
+          wget https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz
+          gunzip gost-linux-amd64-2.11.5.gz
+          chmod +x gost-linux-amd64-2.11.5
+          mv gost-linux-amd64-2.11.5 gost
+          echo "启动 Gost 转发隧道..."
+          nohup ./gost -L http://:8080 -F ${{ secrets.GOST_PROXY }} > gost.log 2>&1 &
+          sleep 3
+          echo "测试本地代理连通性..."
+          curl -x http://127.0.0.1:8080 https://api.ipify.org -v
 
       - name: Install Python Dependencies
         run: |
@@ -54,7 +48,7 @@ jobs:
           RENEW_URL: ${{ secrets.RENEW_URL }}
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          PROXY: socks5://127.0.0.1:10808  # 这里改为 Socks5
+          PROXY: socks5://127.0.0.1:8080  # 这里改为 Socks5
         run: python main.py
 
       - name: Upload Error Screenshots
