@@ -322,10 +322,10 @@ def renew_host2play(url, proxy_url=None):
                 except:
                     final_btn.click(by_js=True)
                 time.sleep(10)
-                msg = "🎉 host2 续期操作成功！"
+                msg = "🎉 host2play 续期操作成功！"
                 success = True
             else:
-                msg = "❌ host2 找不到最终 Renew 按钮"
+                msg = "❌ host2play 找不到最终 Renew 按钮"
                 try:
                     page.handle_alert(accept=True)
                     with open("error_no_final_btn.html", "w", encoding="utf-8") as f:
@@ -345,7 +345,7 @@ def renew_host2play(url, proxy_url=None):
                     print(f"⚠️ 保存源码失败: {dump_err}")
 
     except Exception as e:
-        msg = f"💥 host2 运行异常: {str(e)[:200]}"
+        msg = f"💥 host2play 运行异常: {str(e)[:200]}"
         print(msg)
     finally:
         if page:
